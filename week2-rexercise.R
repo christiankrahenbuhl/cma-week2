@@ -8,21 +8,20 @@ library(lubridate)    # To handle dates and times
 wildschwein_BE <- read_delim("wildschwein_BE_2056.csv",",")
 wildschwein_BE <- st_as_sf(wildschwein_BE, coords = c("E", "N"), 
                            crs = 2056, remove = FALSE)
-#mean of time differences
-timelag <- mean(
-  na.omit(
-  as.integer(difftime(wildschwein_BE$DatetimeUTC, 
-                               lag(wildschwein_BE$DatetimeUTC),
-                               units = "secs"))
-                                              ))
+#timelag
+wildschwein <- mutate(
+  wildschwein_BE,timelag = as.integer(
+    difftime(lead(DatetimeUTC),DatetimeUTC)))
+timelag <- select(wildschwein, timelag)
 
-#How many individuals were tracked?
+
+
+#How many individuals were tracked? 3
 wildschwein_BE$TierName %>% as.factor %>% summary (maxsum=60000) %>% 
   length
 
-#For how long were the individual tracked? Are there gaps?
-wildschwein_BE <- as.in
-wildschwein %>%
+#For how long were the individuals tracked? Are there gaps?
+wildschwein_BE %>%
   group_by(TierID)
   summarise(
     mean_timelag = mean(timelag,na.rm = T)
@@ -44,7 +43,20 @@ caro_3 <- slice(caro, seq(1, 200, 3))
 caro_6 <- slice(caro, seq(1, 200, 6))
 caro_9 <- slice(caro, seq(1, 200, 9))
 
-#calculating speed, timelag and steplength for caro_3,6 and 9
+#calculating speed, timelag and steplength for caro, 3, 6 and 9
+#caro
+timelag_1 <- mean(
+  na.omit(
+    as.integer(difftime(caro$DatetimeUTC, 
+                        lag(caro$DatetimeUTC),
+                        units = "secs"))
+  ))
+
+Ediff_1 <- mean(na.omit(lead(caro$E) - caro$E))
+Ndiff_1 <- mean(na.omit(lead(caro$N) - caro$N))
+steplength_1 <- sqrt(Ediff_1^2+Ndiff_1^2)
+
+speed_1 <- steplength_1 / timelag_1
 #caro_3
 timelag_3 <- mean(
   na.omit(
@@ -85,3 +97,7 @@ Ndiff_9 <- mean(na.omit(lead(caro_9$N) - caro_9$N))
 steplength_9 <- sqrt(Ediff_9^2+Ndiff_9^2)
 
 speed_9 <- steplength_9 / timelag_9 
+
+#Task4
+library(zoo)
+rollmean(speed_1, k = 3,fill = NA,align = "left")
