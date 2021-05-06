@@ -16,3 +16,18 @@ timelag <- as.integer(difftime(wildschwein_BE$DatetimeUTC,
 #How many individuals were tracked?
 wildschwein_BE$TierName %>% as.factor %>% summary (maxsum=60000) %>% 
   length
+
+#For how long were the individual tracked? Are there gaps?
+wildschwein_BE <- as.in
+wildschwein %>%
+  grouEdiff <- as.integer(lead(wildschwein_BE$E) - wildschwein_BE$E)
+Ndiff <- lead(wildschwein_BE$N) - wildschwein_BE$N
+steplength <- sqrt(mean(E^2+N^2))p_by(TierID)
+  summarise(
+    mean_timelag = mean(timelag,na.rm = T)
+  )
+  
+#Task 2
+
+
+#Task 3
