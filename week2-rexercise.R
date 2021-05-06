@@ -26,8 +26,8 @@ wildschwein %>%
   )
   
 #Task 2
-Ediff <- lead(wildschwein_BE$E) - wildschwein_BE$E
-Ndiff <- lead(wildschwein_BE$N) - wildschwein_BE$N
-steplength <- sqrt(mean(E^2+N^2))
+Ediff <- mean(na.omit(lead(wildschwein_BE$E) - wildschwein_BE$E))
+Ndiff <- mean(na.omit(lead(wildschwein_BE$N) - wildschwein_BE$N))
+steplength <- sqrt(Ediff^2+Ndiff^2)
 
 #Task 3
