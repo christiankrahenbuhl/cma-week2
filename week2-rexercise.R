@@ -36,3 +36,8 @@ steplength <- sqrt(Ediff^2+Ndiff^2)
 speed <- steplength / timelag
 
 #Task 3
+caro <- read_delim("caro60.csv",",")
+caro <- st_as_sf(caro, coords = c("E", "N"), crs = 2056, 
+                 remove = FALSE)
+#manually reducing the granularity
+caro_3
