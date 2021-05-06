@@ -38,10 +38,10 @@ wildschwein%>%st_drop_geometry()%>%
 timelag
 
 #Task 2
-Ediff <- mean(na.omit(lead(wildschwein_BE$E) - wildschwein_BE$E))
-Ndiff <- mean(na.omit(lead(wildschwein_BE$N) - wildschwein_BE$N))
+Ediff <- na.omit(lead(wildschwein_BE$E) - wildschwein_BE$E)
+Ndiff <- na.omit(lead(wildschwein_BE$N) - wildschwein_BE$N)
 steplength <- sqrt(Ediff^2+Ndiff^2)
-speed <- steplength / mean(timelag$timelag,na.rm=TRUE)
+speed <- steplength / timelag
 
 #Task 3
 caro <- read_delim("caro60.csv",",")
@@ -110,7 +110,8 @@ steplength_9 <- sqrt(Ediff_9^2+Ndiff_9^2)
 speed_9 <- steplength_9 / timelag_9 
 
 #Plotting derived speed at different time intervams
-caro%>%ggplot(aes(DatetimeUTC,speed),speed_1,speed_3,speed_6,speed_9)+
+caro%>%
+  ggplot(aes(DatetimeUTC,speed),speed_1,speed_3,speed_6,speed_9)+
   geom_line(aes(x=DatetimeUTC,y=speed_1),col='blue')
 #Task4
 library(zoo)
