@@ -40,4 +40,6 @@ caro <- read_delim("caro60.csv",",")
 caro <- st_as_sf(caro, coords = c("E", "N"), crs = 2056, 
                  remove = FALSE)
 #manually reducing the granularity
-caro_3
+caro_3 <- slice(caro, seq(1, 200, 3))
+caro_6 <- slice(caro, seq(1, 200, 6))
+caro_9 <- slice(caro, seq(1, 200, 9))
