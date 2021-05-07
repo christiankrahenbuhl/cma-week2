@@ -54,10 +54,9 @@ caro_9 <- slice(caro, seq(1, 200, 9))
 
 #calculating speed, timelag and steplength for caro, 3, 6 and 9
 #caro
-timelag_1 <- na.omit(
-    as.integer(difftime(caro$DatetimeUTC, 
+timelag_1 <- as.integer(difftime(caro$DatetimeUTC, 
                         lag(caro$DatetimeUTC),
-                        units = "secs"))
+                        units = "secs")
   )
 
 Ediff_1 <- na.omit(lead(caro$E) - caro$E)
@@ -66,10 +65,9 @@ steplength_1 <- sqrt(Ediff_1^2+Ndiff_1^2)
 
 speed_1 <- steplength_1 / timelag_1
 #caro_3
-timelag_3 <- na.omit(
-    as.integer(difftime(caro_3$DatetimeUTC, 
+timelag_3 <- as.integer(difftime(caro_3$DatetimeUTC, 
                         lag(caro_3$DatetimeUTC),
-                        units = "secs"))
+                        units = "secs")
   )
 
 Ediff_3 <- mean(na.omit(lead(caro$E) - caro$E))
@@ -82,10 +80,9 @@ steplength_3 <- sqrt(Ediff_3^2+Ndiff_3^2)
 
 speed_3 <- steplength_3 / timelag_3
 #caro_6
-timelag_6 <- na.omit(
-    as.integer(difftime(caro_6$DatetimeUTC, 
+timelag_6 <- as.integer(difftime(caro_6$DatetimeUTC, 
                         lag(caro_6$DatetimeUTC),
-                        units = "secs"))
+                        units = "secs")
   )
 Ediff_6 <- na.omit(lead(caro_6$E) - caro_6$E)
 Ndiff_6 <- na.omit(lead(caro_6$N) - caro_6$N)
@@ -94,10 +91,9 @@ steplength_6 <- sqrt(Ediff_6^2+Ndiff_6^2)
 speed_6 <- steplength_6 / timelag_6
 
 #caro_9
-timelag_9 <- na.omit(
-    as.integer(difftime(caro_9$DatetimeUTC, 
-                        lag(caro_9$DatetimeUTC),
-                        units = "secs"))
+timelag_9 <- as.integer(difftime(lead(caro_9$DatetimeUTC), 
+                        caro_9$DatetimeUTC,
+                        units = "secs")
   )
 Ediff_9 <- na.omit(lead(caro_9$E) - caro_9$E)
 Ndiff_9 <- na.omit(lead(caro_9$N) - caro_9$N)
@@ -105,7 +101,7 @@ steplength_9 <- sqrt(Ediff_9^2+Ndiff_9^2)
 
 speed_9 <- steplength_9 / timelag_9 
 
-#Plotting derived speed at different time intervams
+#Plotting derived speed at different time intervals
 caro%>%
   ggplot(aes(DatetimeUTC,speed),speed_1,speed_3,speed_6,speed_9)+
   geom_line(aes(x=DatetimeUTC,y=speed_1),col='blue')
