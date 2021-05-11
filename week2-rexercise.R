@@ -20,8 +20,7 @@ timelag<-st_drop_geometry(timelag)
 #timelag class is not integer???
 
 #How many individuals were tracked? 3
-wildschwein_BE$TierName %>% as.factor %>% summary (maxsum=60000) %>% 
-  length
+unique(wildschwein_BE$TierName)  
 
 #For how long were the individuals tracked? Are there gaps?
 wildschwein %>%st_drop_geometry()%>%
@@ -107,5 +106,9 @@ caro%>%
   geom_line(aes(x=DatetimeUTC,y=speed_1),col='blue')
 #Task4
 library(zoo)
-rollmean(speed_1, k = 3,fill = NA,align = "left")
+caro %>%
+  mutate(rspeed= rollmean(speed, 10, align="left",fill=0)) %>%
+  ggplot(aes(x=DatetimeUTC,y=speed)) +
+  geom_col(fill="pink")+
+  geom_line(aes(x=DatetimeUTC,y = rspeed), color = "red")
 
