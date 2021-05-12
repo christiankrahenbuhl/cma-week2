@@ -9,10 +9,10 @@ wildschwein_BE <- read_delim("wildschwein_BE_2056.csv",",")
 wildschwein_BE <- st_as_sf(wildschwein_BE, coords = c("E", "N"), 
                            crs = 2056, remove = FALSE)
 #timelag
-wildschwein <- mutate(
+wildschwein_BE <- mutate(
   wildschwein_BE,timelag = as.integer(
     difftime(lead(DatetimeUTC),DatetimeUTC, units = "secs")))
-timelag <- select(wildschwein, timelag)
+timelag <- select(wildschwein_BE, timelag)
 #getting rid of unexpected "geometry" column
 timelag<-st_drop_geometry(timelag)
 
@@ -23,24 +23,29 @@ timelag<-st_drop_geometry(timelag)
 unique(wildschwein_BE$TierName)  
 
 #For how long were the individuals tracked? Are there gaps?
-wildschwein %>%st_drop_geometry()%>%
+wildschwein_BE %>%st_drop_geometry()%>%
   group_by(TierID)%>%
   summarise(
     mean_timelag = mean(timelag,na.rm = T)
   )
   
 #Were all individuals tracked concurrently or sequentially?
-wildschwein%>%st_drop_geometry()%>%
+wildschwein_BE%>%st_drop_geometry()%>%
   group_by(TierID)%>%summarise(min(DatetimeUTC),max(DatetimeUTC))
 #individuals 016A and 018A started at the same day and 002A and 018A ended at the same day
 #What is the temporal sampling interval between the locations?
 timelag
 
 #Task 2
-Ediff <- na.omit(lead(wildschwein_BE$E) - wildschwein_BE$E)
-Ndiff <- na.omit(lead(wildschwein_BE$N) - wildschwein_BE$N)
-steplength <- sqrt(Ediff^2+Ndiff^2)
-speed <- steplength / timelag
+wildschwein_BE  <- wildschwein_BE %>%
+  group_by(TierID) %>%
+  mutate(
+    Ediff =  lead(E) - E,
+    Ndiff =  lead(N) - N,
+    steplength =  sqrt(Ediff^2 + Ndiff^2)
+  )
+
+speed <- wildschwein_BE$steplength / wildschwein_BE$timelag
 
 #Task 3
 caro <- read_delim("caro60.csv",",")
@@ -53,52 +58,49 @@ caro_9 <- slice(caro, seq(1, 200, 9))
 
 #calculating speed, timelag and steplength for caro, 3, 6 and 9
 #caro
-timelag_1 <- as.integer(difftime(caro$DatetimeUTC, 
-                        lag(caro$DatetimeUTC),
-                        units = "secs")
+caro  <- caro %>%
+  mutate(
+    Ediff =  lead(E) - E,
+    Ndiff =  lead(N) - N,
+    steplength =  sqrt(Ediff^2 + Ndiff^2),
+    timelag = as.integer(
+      difftime(lead(DatetimeUTC),DatetimeUTC, units = "secs"))
   )
 
-Ediff_1 <- na.omit(lead(caro$E) - caro$E)
-Ndiff_1 <- na.omit(lead(caro$N) - caro$N)
-steplength_1 <- sqrt(Ediff_1^2+Ndiff_1^2)
-
-speed_1 <- steplength_1 / timelag_1
+speed_1 <- caro$steplength / caro$timelag
 #caro_3
-timelag_3 <- as.integer(difftime(caro_3$DatetimeUTC, 
-                        lag(caro_3$DatetimeUTC),
-                        units = "secs")
+caro_3  <- caro_3 %>%
+  mutate(
+    Ediff =  lead(E) - E,
+    Ndiff =  lead(N) - N,
+    steplength =  sqrt(Ediff^2 + Ndiff^2),
+    timelag = as.integer(
+      difftime(lead(DatetimeUTC),DatetimeUTC, units = "secs"))
   )
 
-Ediff_3 <- mean(na.omit(lead(caro$E) - caro$E))
-Ndiff_3 <- mean(na.omit(lead(caro$N) - caro$N))
-steplength_3 <- sqrt(Ediff_3^2+Ndiff_3^2)
-
-Ediff_3 <- na.omit(lead(caro_3$E) - caro_3$E)
-Ndiff_3 <- na.omit(lead(caro_3$N) - caro_3$N)
-steplength_3 <- sqrt(Ediff_3^2+Ndiff_3^2)
-
-speed_3 <- steplength_3 / timelag_3
+speed_3 <- caro_3$steplength / caro_3$timelag
 #caro_6
-timelag_6 <- as.integer(difftime(caro_6$DatetimeUTC, 
-                        lag(caro_6$DatetimeUTC),
-                        units = "secs")
+caro_6  <- caro_6 %>%
+  mutate(
+    Ediff =  lead(E) - E,
+    Ndiff =  lead(N) - N,
+    steplength =  sqrt(Ediff^2 + Ndiff^2),
+    timelag = as.integer(
+      difftime(lead(DatetimeUTC),DatetimeUTC, units = "secs"))
   )
-Ediff_6 <- na.omit(lead(caro_6$E) - caro_6$E)
-Ndiff_6 <- na.omit(lead(caro_6$N) - caro_6$N)
-steplength_6 <- sqrt(Ediff_6^2+Ndiff_6^2)
 
-speed_6 <- steplength_6 / timelag_6
-
+speed_6 <- caro_6$steplength / caro_6$timelag
 #caro_9
-timelag_9 <- as.integer(difftime(lead(caro_9$DatetimeUTC), 
-                        caro_9$DatetimeUTC,
-                        units = "secs")
+caro_9  <- caro_9 %>%
+  mutate(
+    Ediff =  lead(E) - E,
+    Ndiff =  lead(N) - N,
+    steplength =  sqrt(Ediff^2 + Ndiff^2),
+    timelag = as.integer(
+      difftime(lead(DatetimeUTC),DatetimeUTC, units = "secs"))
   )
-Ediff_9 <- na.omit(lead(caro_9$E) - caro_9$E)
-Ndiff_9 <- na.omit(lead(caro_9$N) - caro_9$N)
-steplength_9 <- sqrt(Ediff_9^2+Ndiff_9^2)
 
-speed_9 <- steplength_9 / timelag_9 
+speed_9 <- caro_9$steplength / caro_9$timelag
 
 #Plotting derived speed at different time intervals
 caro%>%
