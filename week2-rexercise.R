@@ -110,19 +110,20 @@ caro%>%
 library(zoo)
 #k=10
 caro %>%
-  mutate(rspeed= rollmean(speed, 10, align="left",fill=0)) %>%
-  ggplot(aes(x=DatetimeUTC,y=speed)) +
+  mutate(rspeed= rollmean(speed_1, 10, align="left",fill=0)) %>%
+  ggplot(aes(x=DatetimeUTC,y=speed_1)) +
   geom_col(fill="pink")+
   geom_line(aes(x=DatetimeUTC,y = rspeed), color = "red")
 #k=5
 caro %>%
-  mutate(rspeed= rollmean(speed, 5, align="left",fill=0)) %>%
-  ggplot(aes(x=DatetimeUTC,y=speed)) +
+  mutate(rspeed= rollmean(speed_1, 5, align="left",fill=0)) %>%
+  ggplot(aes(x=DatetimeUTC,y=speed_1)) +
   geom_col(fill="pink")+
   geom_line(aes(x=DatetimeUTC,y = rspeed), color = "red")
+
 #k=25
 caro %>%
-  mutate(rspeed= rollmean(speed, 25, align="left",fill=0)) %>%
-  ggplot(aes(x=DatetimeUTC,y=speed)) +
+  mutate(rspeed= rollmean(speed_1, 25, align="left",fill=0)) %>%
+  ggplot(aes(x=DatetimeUTC,y=speed_1)) +
   geom_col(fill="pink")+
   geom_line(aes(x=DatetimeUTC,y = rspeed), color = "red")
