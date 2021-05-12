@@ -42,10 +42,9 @@ wildschwein_BE  <- wildschwein_BE %>%
   mutate(
     Ediff =  lead(E) - E,
     Ndiff =  lead(N) - N,
-    steplength =  sqrt(Ediff^2 + Ndiff^2)
+    steplength =  sqrt(Ediff^2 + Ndiff^2),
+    speed = steplength /timelag
   )
-
-speed <- wildschwein_BE$steplength / wildschwein_BE$timelag
 
 #Task 3
 caro <- read_delim("caro60.csv",",")
@@ -64,10 +63,10 @@ caro  <- caro %>%
     Ndiff =  lead(N) - N,
     steplength =  sqrt(Ediff^2 + Ndiff^2),
     timelag = as.integer(
-      difftime(lead(DatetimeUTC),DatetimeUTC, units = "secs"))
+      difftime(lead(DatetimeUTC),DatetimeUTC, units = "secs")),
+    speed = steplength /timelag
   )
 
-speed_1 <- caro$steplength / caro$timelag
 #caro_3
 caro_3  <- caro_3 %>%
   mutate(
@@ -75,10 +74,10 @@ caro_3  <- caro_3 %>%
     Ndiff =  lead(N) - N,
     steplength =  sqrt(Ediff^2 + Ndiff^2),
     timelag = as.integer(
-      difftime(lead(DatetimeUTC),DatetimeUTC, units = "secs"))
+      difftime(lead(DatetimeUTC),DatetimeUTC, units = "secs")),
+    speed = steplength /timelag
   )
 
-speed_3 <- caro_3$steplength / caro_3$timelag
 #caro_6
 caro_6  <- caro_6 %>%
   mutate(
@@ -86,10 +85,10 @@ caro_6  <- caro_6 %>%
     Ndiff =  lead(N) - N,
     steplength =  sqrt(Ediff^2 + Ndiff^2),
     timelag = as.integer(
-      difftime(lead(DatetimeUTC),DatetimeUTC, units = "secs"))
+      difftime(lead(DatetimeUTC),DatetimeUTC, units = "secs")),
+    speed = steplength /timelag
   )
 
-speed_6 <- caro_6$steplength / caro_6$timelag
 #caro_9
 caro_9  <- caro_9 %>%
   mutate(
@@ -97,15 +96,14 @@ caro_9  <- caro_9 %>%
     Ndiff =  lead(N) - N,
     steplength =  sqrt(Ediff^2 + Ndiff^2),
     timelag = as.integer(
-      difftime(lead(DatetimeUTC),DatetimeUTC, units = "secs"))
+      difftime(lead(DatetimeUTC),DatetimeUTC, units = "secs")),
+    speed = steplength /timelag
   )
 
-speed_9 <- caro_9$steplength / caro_9$timelag
-
 #Plotting derived speed at different time intervals
-caro%>%
-  ggplot(aes(DatetimeUTC,speed),speed_1,speed_3,speed_6,speed_9)+
-  geom_line(aes(x=DatetimeUTC,y=speed_1),col='blue')
+ggplot(caro, aes(DatetimeUTC,speed_1))+
+  geom_line(col='red') 
+  geom_line(caro_3,col='blue')
 #Task4
 library(zoo)
 #k=10
